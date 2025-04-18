@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Employee {
 
+	private static final int[] GRADE_SALARIES = { 3000000, 5000000, 7000000 }; // Konstanta untuk menentukan gaji bulanan pegawai berdasarkan grade kepegawaiannya (grade 1: 3.000.000 per bulan, grade 2: 5.000.000 per bulan, grade 3: 7.000.000 per bulan)
 	private String employeeId;
 	private String firstName;
 	private String lastName;
@@ -52,23 +53,12 @@ public class Employee {
 	 * Jika pegawai adalah warga negara asing gaji bulanan diperbesar sebanyak 50%
 	 */
 	
-	public void setMonthlySalary(int grade) {	
-		if (grade == 1) {
-			monthlySalary = 3000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
-		}else if (grade == 2) {
-			monthlySalary = 5000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
-		}else if (grade == 3) {
-			monthlySalary = 7000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
+	public void setMonthlySalary(int grade) {
+		if (grade < 1 || grade > GRADE_SALARIES.length) {
+			throw new IllegalArgumentException("Invalid grade");
 		}
+		int baseSalary = GRADE_SALARIES[grade - 1];
+		this.monthlySalary = isForeigner ? (int) (baseSalary * 1.5) : baseSalary;
 	}
 	
 	public void setAnnualDeductible(int deductible) {	
