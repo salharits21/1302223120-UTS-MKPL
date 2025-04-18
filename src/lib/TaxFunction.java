@@ -20,30 +20,23 @@ public class TaxFunction {
 	private static final double TAX_RATE = 0.05;
 
 	
-	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-		
-		int tax = 0;
-		
-		if (numberOfMonthWorking > 12) {
-			System.err.println("More than 12 month working per year");
-		}
-		
+	public static int calculateTax(int annualIncome, int deductible, boolean isMarried, int numberOfChildren) {
 		if (numberOfChildren > MAX_CHILDREN) {
 			numberOfChildren = MAX_CHILDREN;
 		}
-		
+
+		int nonTaxableIncome = BASE_NONTAXABLE_INCOME;
+
 		if (isMarried) {
-			tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (BASE_NONTAXABLE_INCOME + MARRIAGE_ALLOWANCE + (numberOfChildren * CHILD_ALLOWANCE))));
-		}else {
-			tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - BASE_NONTAXABLE_INCOME));
+			nonTaxableIncome += MARRIAGE_ALLOWANCE;
 		}
-		
-		if (tax < 0) {
-			return 0;
-		}else {
-			return tax;
-		}
-			 
+
+		nonTaxableIncome += numberOfChildren * CHILD_ALLOWANCE;
+
+		int taxableIncome = annualIncome - deductible - nonTaxableIncome;
+		int tax = (int) Math.round(TAX_RATE * Math.max(taxableIncome, 0));
+
+		return tax;
 	}
 	
 }
